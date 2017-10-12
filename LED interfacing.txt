@@ -1,0 +1,29 @@
+/*
+ * GccApplication1_led.c
+ *
+ 
+ * Author : Lion'S Fort
+ 
+ Micro controller    Atmega32A
+ F_CPU               16Mhz
+ 
+ Led interfacing 
+ */ 
+
+#include <avr/io.h>
+#define F_CPU 160000000UL
+#include <util/delay.h>
+
+int main(void)
+{
+   DDRA |= (1<<0);  // set led direction as o/p
+   
+    
+    while (1) 
+    {
+		PORTA ^=(1<<0);  // toggle led PA0
+		_delay_ms(100);  // delay
+		PORTA &=~(1<<0);  // clear bit PA0
+		_delay_ms(100); // delay
+    }
+}
