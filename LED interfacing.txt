@@ -2,7 +2,7 @@
  * GccApplication1_led.c
  *
  
- * Author : Lion'S Fort
+ * Author :Avinash Bhavsar
  
  Micro controller    Atmega32A
  F_CPU               16Mhz
