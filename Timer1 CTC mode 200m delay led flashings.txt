@@ -1,0 +1,40 @@
+/*
+ * AB_timer-CTC mode_200 ms delay.c
+ *
+ * Author : Avinash Bhavsar
+
+ Microcontroller - Atmega32A
+ Crystal -XTAL 16 MHz
+ Code- Generate delay of 200ms with using timer in CTC mode.
+        
+		Timer1 16-bit value (in between 0 and 65535) with using prescaller 64  
+        clock pulse reduce to 250khz to get overflow timer needs 263.14 ms 
+		timer count 200ms require 49,998 tick of 16bit timer. 
+          
+ 
+ */ 
+
+#include <avr/io.h>
+#define F_CPU 16000000UL
+#include <util/delay.h>
+ void timer1_init()
+ {
+	 TCCR1B|=(1<<CS11)|(1<<CS10)|(1<<WGM12);  // Prescaller 64  CTC mode
+	 TCNT1 =0;   // initialize timer counter register
+	 OCR1A=49998;  // set value for compare 
+}
+
+int main(void)
+{
+  DDRB|=(1<<0);  // led port direction
+  timer1_init(); // timer Initialize  
+    while (1) 
+    {
+		if (TIFR & (1 << OCF1A))  // check whether the flag bit is set ,if set, that means that there has been a compare match 
+		{
+			PORTB^=(1<<0); // toggle led 
+		}
+		TIFR|=(1<<OCF1A);  //clear the flag bit manually ( there is no ISR to execute )
+    }
+}
+
