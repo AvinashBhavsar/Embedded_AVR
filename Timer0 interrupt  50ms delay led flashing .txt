@@ -1,0 +1,65 @@
+/*
+ *
+ * Author : Avinash Bhavsar.
+
+ *MicroController's - ATmega32A
+ *Crystal -           16Mhz
+ 
+ Code- Generate timer delay of 50ms by using timer interrupt function
+       
+	    by using timer0 with prescaller of 256 it takes 4.096ms to complete one overflow .
+		
+	    by using overflow interrupt, ISR fires whenever timer0 overflow. 
+	    count total overflow and calculate time for 50ms.
+	    16us*256=4.096ms
+		4.096 * 12 = 49.152
+	    50 - 49.152 = 0.848ms 
+			
+	    12 overflow + TCNT 53 tick 
+		Connect led on PB0 port.
+		
+NOTE-   Now this time led will observe like blinking.
+		 
+
+	    
+        
+ */ 
+#define F_CPU 16000000UL
+#include <avr/io.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
+
+volatile uint8_t overflow;
+
+void timer0_init()
+{
+	TCCR0|=(1<<CS02); // prescaller of  256 
+	TCNT0 = 0;   // reset timer counter register
+	TIMSK |= (1<<TOIE0); // Enable overflow interrupt 
+	sei(); // global interrupt enable 
+	overflow = 0; // initialize variable 
+	 
+}
+
+ISR(TIMER0_OVF_vect)  // overflow interrupt 
+{
+	overflow ++; // increment 
+}
+int main(void)
+{
+	DDRB|=(1<<0);  // set direction 
+	timer0_init();
+  while (1) 
+    {
+		if (overflow>=12)  // set compare
+		{
+			if (TCNT0 >=53)  // compare unto 53 tick
+			{
+				    PORTB ^=(1<<0);  // toggle led of port PB0
+					TCNT0=0;  // reset timer counter register
+					overflow=0;  // reset overflow variable 
+			}
+		}
+    }
+}
+
