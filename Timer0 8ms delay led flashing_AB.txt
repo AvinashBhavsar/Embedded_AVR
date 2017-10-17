@@ -1,0 +1,47 @@
+/*
+ * AB_timer_8ms delay.c
+ 
+ * Author Avinash Bhavsar
+ 
+ MicroController- Atmega32A
+ Crystal -         16Mhz
+ 
+ Code = Generate delay of 8ms using 8bit timer0 
+        with using Timer0  and without Prescaller it takes 16us to complete TCNT register
+        with using Prescaller of 1034 it require 16.384ms 
+        but from that we only count unto 8ms so it takes 125 ticks 
+        8ms / 0.064=125 ticks.
+		
+		blinking led per 8ms on port B0
+		
+		NOTE-Sorry Led may not see like blinking,It only see with constantly on . Its is very low delay to see led flashing .
+		After nearly 17ms to 20 ms delay gap led will observe like flashing.
+ 
+		
+ */ 
+#define F_CPU 16000000UL
+#include <avr/io.h>
+#include<util/delay.h>
+
+
+void timer_init()
+{
+	TCCR0 |= (1<<CS02)|(1<<CS00);  // Prescaller to 1024
+	TCNT0 = 0;  // initialize timer counter register
+}
+
+int main(void)
+{
+	DDRB|=(1<<0);  // set led direction as o/p 
+	timer_init();  // initialize timer0
+	
+    
+    while (1) 
+    {
+		if (TCNT0>=125)
+		{
+			PORTB^=(1<<0); // toggle led on PB0
+			TCNT0=0; // Reset timer counter register
+		}
+    }
+}
