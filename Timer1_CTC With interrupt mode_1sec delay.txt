@@ -1,0 +1,55 @@
+/*
+ * GccApplication7_timer1_CTC mode.c
+ *
+ * Created: 11/9/2017 2:18:34 PM
+ * Author : Lion'sFort Avinash Bhavsar
+microcontroller  - ATmega32A
+Crystal  -  16000000UL
+
+ 
+ Generation of 1 sec delay using timer1 with using timer in CTC mode
+ 
+ */ 
+
+#include <avr/io.h>
+#define F_CPU 16000000UL
+#include <util/delay.h>
+#include <avr/interrupt.h>
+volatile uint8_t overflow;
+int timer_init()
+{
+	TCCR1B |=(1<<CS11)|(1<<WGM12);
+	TCNT1=0;
+	OCR1A=65535;
+	
+	TIMSK|=(1<<OCIE1A);
+	sei();
+}
+
+ISR(TIMER1_COMPA_vect)
+{
+	overflow++;
+	if (overflow>=30)
+	{
+		if (OCR1A>=1000)
+		{
+		
+		PORTB^=(1<<0);
+	    overflow=0;
+       // OCR1A=0;
+	   // TCNT1=0;
+		}
+	}
+	
+}
+
+int main(void)
+{
+  
+  DDRB |=(1<<0);
+  timer_init();
+    while (1) 
+    {
+		
+    }
+}
