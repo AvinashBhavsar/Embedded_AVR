@@ -3,6 +3,9 @@
  
  Generation of time delay of 1 sec with using normal + interrupt mode
  
+ Microcontroleler - ATmega32a
+Crystl - 16Mhz External
+ 
  
  
  */ 
