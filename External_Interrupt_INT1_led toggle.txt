@@ -1,0 +1,40 @@
+/*
+ * GccApplication9_External Interrupt.c
+ *
+ * Created: 11/9/2017 5:53:26 PM
+ * Author : Lion'sFort Avinash Bhavsar
+
+ Microcontroller - Atmega32a
+ Crystal - 16Mhz
+ 
+ External interrupt on PD5 INT1 check led o pin PB0
+ */ 
+
+#include <avr/io.h>
+#define F_CPU 16000000UL
+#include <avr/interrupt.h>
+#include <util/delay.h>
+
+ISR(INT1_vect)
+{
+	_delay_ms(50);
+	PORTB^=(1<<0);
+	//_delay_ms(500);
+	//PORTB&=~(1<<0);
+	
+}
+
+int main(void)
+{
+   DDRD&=~(1<<3); // set to input direction
+   DDRB|=(1<<0); //set as o/p   for led
+   MCUCR |=(1<<ISC10); // set change to any condition 
+   GICR|=(1<<INT1); // Enable to external INT1
+   sei();   // Globle interrupt enable 
+   
+   
+    while (1) 
+    {
+    }
+}
+
