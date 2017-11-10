@@ -9,6 +9,9 @@
  
  Interfacing of HC05 blue-tooth module by using UART interfacing and toggle led on PB0 or connect any relay module control
  
+ send 1 for to toggle PB0
+ send other any to off PB0
+ 
  note=UBRR =((F_CPU)/(BAUD*16UL)-1)
  
  F_CPU=16000000
